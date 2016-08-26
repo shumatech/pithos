@@ -27,9 +27,9 @@ class StationsDialog(Gtk.Dialog):
     def __init__(self, pithos, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.treeview = self.get_template_child(Gtk.TreeView, 'treeview')
-        self.delete_confirm_dialog = self.get_template_child(Gtk.Dialog, 'delete_confirm_dialog')
-        self.station_menu = self.get_template_child(Gtk.Menu, 'station_menu')
+        self.treeview = self.get_template_child('treeview')
+        self.delete_confirm_dialog = self.get_template_child('delete_confirm_dialog')
+        self.station_menu = self.get_template_child('station_menu')
 
         self.pithos = pithos
         self.model = pithos.stations_model

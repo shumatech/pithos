@@ -84,16 +84,16 @@ class PreferencesPithosDialog(Gtk.Dialog):
     def __init__(self, *args, **kwargs):
         super(Gtk.Dialog, self).__init__(*args, use_header_bar=1, **kwargs)
 
-        self.preference_btn = self.get_template_child(Gtk.Button, 'preference_btn')
-        self.plugins_listbox = self.get_template_child(Gtk.ListBox, 'plugins_listbox')
-        self.email_entry = self.get_template_child(Gtk.Entry, 'email_entry')
-        self.password_entry = self.get_template_child(Gtk.Entry, 'password_entry')
-        self.audio_quality_combo = self.get_template_child(Gtk.ComboBox, 'audio_quality_combo')
-        self.proxy_entry = self.get_template_child(Gtk.Entry, 'proxy_entry')
-        self.control_proxy_entry = self.get_template_child(Gtk.Entry, 'control_proxy_entry')
-        self.control_proxy_pac_entry = self.get_template_child(Gtk.Entry, 'control_proxy_pac_entry')
-        self.pandora_one_checkbutton = self.get_template_child(Gtk.CheckButton, 'pandora_one_checkbutton')
-        self.explicit_content_filter_checkbutton = self.get_template_child(Gtk.CheckButton, 'explicit_content_filter_checkbutton')
+        self.preference_btn = self.get_template_child('preference_btn')
+        self.plugins_listbox = self.get_template_child('plugins_listbox')
+        self.email_entry = self.get_template_child('email_entry')
+        self.password_entry = self.get_template_child('password_entry')
+        self.audio_quality_combo = self.get_template_child('audio_quality_combo')
+        self.proxy_entry = self.get_template_child('proxy_entry')
+        self.control_proxy_entry = self.get_template_child('control_proxy_entry')
+        self.control_proxy_pac_entry = self.get_template_child('control_proxy_pac_entry')
+        self.pandora_one_checkbutton = self.get_template_child('pandora_one_checkbutton')
+        self.explicit_content_filter_checkbutton = self.get_template_child('explicit_content_filter_checkbutton')
 
         self.settings = Gio.Settings.new('io.github.Pithos')
 

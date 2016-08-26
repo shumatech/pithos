@@ -28,8 +28,8 @@ class SearchDialog(Gtk.Dialog):
 
         super().__init__(*args, use_header_bar=1, **kwargs)
 
-        self.entry = self.get_template_child(Gtk.Entry, 'entry')
-        self.treeview = self.get_template_child(Gtk.TreeView, 'treeview')
+        self.entry = self.get_template_child('entry')
+        self.treeview = self.get_template_child('treeview')
 
         self.model = Gtk.ListStore(GObject.TYPE_PYOBJECT, str)
         self.treeview.set_model(self.model)
