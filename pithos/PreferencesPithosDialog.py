@@ -18,7 +18,7 @@ import logging
 
 from gi.repository import Gio, Gtk, GObject, Pango
 
-from .gi_composites import GtkTemplate
+
 from .util import get_account_password, set_account_password
 from .pandora.data import valid_audio_formats
 
@@ -75,28 +75,25 @@ class PithosPluginRow(Gtk.ListBoxRow):
             self.get_toplevel().preference_btn.set_sensitive(self.plugin.preferences_dialog is not None)
 
 
-@GtkTemplate(ui='/io/github/Pithos/ui/PreferencesPithosDialog.ui')
+@Gtk.Template(ui='/io/github/Pithos/ui/PreferencesPithosDialog.ui')
 class PreferencesPithosDialog(Gtk.Dialog):
-    __gtype_name__ = "PreferencesPithosDialog"
-
     __gsignals__ = {
         'login-changed': (GObject.SignalFlags.RUN_FIRST, None, ()),
     }
 
-    preference_btn = GtkTemplate.Child()
-    plugins_listbox = GtkTemplate.Child()
-    email_entry = GtkTemplate.Child()
-    password_entry = GtkTemplate.Child()
-    audio_quality_combo = GtkTemplate.Child()
-    proxy_entry = GtkTemplate.Child()
-    control_proxy_entry = GtkTemplate.Child()
-    control_proxy_pac_entry = GtkTemplate.Child()
-    pandora_one_checkbutton = GtkTemplate.Child()
-    explicit_content_filter_checkbutton = GtkTemplate.Child()
-
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, use_header_bar=1, **kwargs)
-        self.init_template()
+        super(Gtk.Dialog, self).__init__(*args, use_header_bar=1, **kwargs)
+
+        self.preference_btn = self.get_template_child(Gtk.Button, 'preference_btn')
+        self.plugins_listbox = self.get_template_child(Gtk.ListBox, 'plugins_listbox')
+        self.email_entry = self.get_template_child(Gtk.Entry, 'email_entry')
+        self.password_entry = self.get_template_child(Gtk.Entry, 'password_entry')
+        self.audio_quality_combo = self.get_template_child(Gtk.ComboBox, 'audio_quality_combo')
+        self.proxy_entry = self.get_template_child(Gtk.Entry, 'proxy_entry')
+        self.control_proxy_entry = self.get_template_child(Gtk.Entry, 'control_proxy_entry')
+        self.control_proxy_pac_entry = self.get_template_child(Gtk.Entry, 'control_proxy_pac_entry')
+        self.pandora_one_checkbutton = self.get_template_child(Gtk.CheckButton, 'pandora_one_checkbutton')
+        self.explicit_content_filter_checkbutton = self.get_template_child(Gtk.CheckButton, 'explicit_content_filter_checkbutton')
 
         self.settings = Gio.Settings.new('io.github.Pithos')
 
@@ -134,12 +131,12 @@ class PreferencesPithosDialog(Gtk.Dialog):
             self.plugins_listbox.add(row)
         self.plugins_listbox.show_all()
 
-    @GtkTemplate.Callback
+    @Gtk.Template.Callback
     def on_plugins_row_selected(self, box, row):
         if row:
             self.preference_btn.set_sensitive(row.plugin.preferences_dialog is not None)
 
-    @GtkTemplate.Callback
+    @Gtk.Template.Callback
     def on_prefs_btn_clicked(self, btn):
         dialog = self.plugins_listbox.get_selected_rows()[0].plugin.preferences_dialog
         dialog.set_transient_for(self)
@@ -147,7 +144,7 @@ class PreferencesPithosDialog(Gtk.Dialog):
         dialog.set_modal(True)
         dialog.show_all()
 
-    @GtkTemplate.Callback
+    @Gtk.Template.Callback
     def on_account_changed(self, widget):
         if not self.email_entry.get_text() or not self.password_entry.get_text():
             self.set_response_sensitive(Gtk.ResponseType.APPLY, False)
@@ -158,7 +155,7 @@ class PreferencesPithosDialog(Gtk.Dialog):
         if before and not row.get_header():
             row.set_header(Gtk.Separator.new(Gtk.Orientation.HORIZONTAL))
 
-    @GtkTemplate.Callback
+    @Gtk.Template.Callback
     def on_show(self, widget):
         self.settings.delay()
 

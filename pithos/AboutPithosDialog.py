@@ -15,15 +15,13 @@
 ### END LICENSE
 
 from gi.repository import Gtk
-from .gi_composites import GtkTemplate
 
-@GtkTemplate(ui='/io/github/Pithos/ui/AboutPithosDialog.ui')
+
+@Gtk.Template(ui='/io/github/Pithos/ui/AboutPithosDialog.ui')
 class AboutPithosDialog(Gtk.AboutDialog):
-    __gtype_name__ = "AboutPithosDialog"
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.init_template()
+
 
         theme = Gtk.IconTheme.get_default()
         self.set_logo(theme.load_icon('io.github.Pithos', 96, 0))

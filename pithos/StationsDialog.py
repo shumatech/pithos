@@ -18,21 +18,18 @@ import logging
 
 from gi.repository import Gtk
 
-from .gi_composites import GtkTemplate
 from .util import open_browser
 from . import SearchDialog
 
-@GtkTemplate(ui='/io/github/Pithos/ui/StationsDialog.ui')
+@Gtk.Template(ui='/io/github/Pithos/ui/StationsDialog.ui')
 class StationsDialog(Gtk.Dialog):
-    __gtype_name__ = "StationsDialog"
-
-    treeview = GtkTemplate.Child()
-    delete_confirm_dialog = GtkTemplate.Child()
-    station_menu = GtkTemplate.Child()
 
     def __init__(self, pithos, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.init_template()
+
+        self.treeview = self.get_template_child(Gtk.TreeView, 'treeview')
+        self.delete_confirm_dialog = self.get_template_child(Gtk.Dialog, 'delete_confirm_dialog')
+        self.station_menu = self.get_template_child(Gtk.Menu, 'station_menu')
 
         self.pithos = pithos
         self.model = pithos.stations_model
@@ -92,7 +89,7 @@ class StationsDialog(Gtk.Dialog):
         if sel:
             return self.treeview.get_model().get_value(sel[1], 0)
 
-    @GtkTemplate.Callback
+    @Gtk.Template.Callback
     def on_treeview_button_press_event(self, treeview, event):
         if event.button == 3:
             x = int(event.x)
@@ -106,23 +103,23 @@ class StationsDialog(Gtk.Dialog):
                 self.station_menu.popup(None, None, None, None, event.button, time)
             return True
 
-    @GtkTemplate.Callback
+    @Gtk.Template.Callback
     def on_menuitem_listen(self, widget):
         station = self.selected_station()
         self.pithos.station_changed(station)
         self.hide()
 
-    @GtkTemplate.Callback
+    @Gtk.Template.Callback
     def on_menuitem_info(self, widget):
         open_browser(self.selected_station().info_url, parent=self)
 
-    @GtkTemplate.Callback
+    @Gtk.Template.Callback
     def on_menuitem_rename(self, widget):
         sel = self.treeview.get_selection().get_selected()
         path = self.treeview.get_model().get_path(sel[1])
         self.treeview.set_cursor(path, self.treeview.get_column(0) ,True)
 
-    @GtkTemplate.Callback
+    @Gtk.Template.Callback
     def on_menuitem_delete(self, widget):
         station = self.selected_station()
         
@@ -137,7 +134,7 @@ class StationsDialog(Gtk.Dialog):
             if self.pithos.current_station is station:
                 self.pithos.station_changed(self.model[0][0])
 
-    @GtkTemplate.Callback
+    @Gtk.Template.Callback
     def add_station(self, widget):
         if self.searchDialog:
             self.searchDialog.present()
@@ -146,11 +143,11 @@ class StationsDialog(Gtk.Dialog):
             self.searchDialog.show_all()
             self.searchDialog.connect("response", self.add_station_cb)
 
-    @GtkTemplate.Callback
+    @Gtk.Template.Callback
     def refresh_stations(self, widget):
         self.pithos.refresh_stations(self.pithos)
 
-    @GtkTemplate.Callback
+    @Gtk.Template.Callback
     def add_station_cb(self, dialog, response):
         logging.info("in add_station_cb {} {}".format(dialog.result, response))
         if response == Gtk.ResponseType.OK:
@@ -170,7 +167,7 @@ class StationsDialog(Gtk.Dialog):
         self.treeview.set_cursor(0)
         logging.debug("5 ")
 
-    @GtkTemplate.Callback
+    @Gtk.Template.Callback
     def on_close(self, widget, data=None):
         self.hide()
 
