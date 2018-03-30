@@ -63,6 +63,30 @@
       <summary>Quality of songs</summary>
     </key>
 
+    <key type="s" name="audio-output">
+      <choices>
+        <choice value="autoaudiosink"/>
+        <choice value="alsasink"/>
+        <choice value="pulsesink"/>
+        <choice value="jackaudiosink"/>
+        <choice value="osssink"/>
+      </choices>
+      <default>"autoaudiosink"</default>
+      <summary>Audio output interface</summary>
+    </key>
+
+    <key type="s" name="audio-buffer">
+      <choices>
+        <choice value="1"/>
+        <choice value="2"/>
+        <choice value="3"/>
+        <choice value="4"/>
+        <choice value="5"/>
+      </choices>
+      <default>"3"</default>
+      <summary>Audio buffer length</summary>
+    </key>
+
     <child name="mediakeys" schema="io.github.Pithos.plugin-enabled"/>
     <child name="screensaver-pause" schema="io.github.Pithos.plugin-enabled"/>
     <child name="mpris" schema="io.github.Pithos.plugin-enabled"/>

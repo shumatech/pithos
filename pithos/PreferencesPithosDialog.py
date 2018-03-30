@@ -105,11 +105,13 @@ class PreferencesPithosDialog(Gtk.Dialog):
     plugins_listbox = GtkTemplate.Child()
     email_entry = GtkTemplate.Child()
     password_entry = GtkTemplate.Child()
-    audio_quality_combo = GtkTemplate.Child()
     proxy_entry = GtkTemplate.Child()
     control_proxy_entry = GtkTemplate.Child()
     control_proxy_pac_entry = GtkTemplate.Child()
     explicit_content_filter_checkbutton = GtkTemplate.Child()
+    audio_quality_combo = GtkTemplate.Child()
+    audio_output_combo = GtkTemplate.Child()
+    audio_buffer_combo = GtkTemplate.Child()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, use_header_bar=1, **kwargs)
@@ -127,6 +129,8 @@ class PreferencesPithosDialog(Gtk.Dialog):
             'control-proxy': (self.control_proxy_entry, 'text'),
             'control-proxy-pac': (self.control_proxy_pac_entry, 'text'),
             'audio-quality': (self.audio_quality_combo, 'active-id'),
+            'audio-output': (self.audio_output_combo, 'active-id'),
+            'audio-buffer': (self.audio_buffer_combo, 'active-id'),
         }
 
         for key, val in settings_mapping.items():

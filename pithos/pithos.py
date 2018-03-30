@@ -254,10 +254,12 @@ class PithosWindow(Gtk.ApplicationWindow):
         self.init_template()
 
         self.settings = Gio.Settings.new('io.github.Pithos')
-        self.settings.connect('changed::audio-quality', self.set_audio_quality)
         self.settings.connect('changed::proxy', self.set_proxy)
         self.settings.connect('changed::control-proxy', self.set_proxy)
         self.settings.connect('changed::control-proxy-pac', self.set_proxy)
+        self.settings.connect('changed::audio-quality', self.set_audio_quality)
+        self.settings.connect('changed::audio-output', self.set_audio_output)
+        self.settings.connect('changed::audio-buffer', self.set_audio_buffer)
 
         self.prefs_dlg = PreferencesPithosDialog.PreferencesPithosDialog(transient_for=self)
         self.prefs_dlg.connect_after('response', self.on_prefs_response)
@@ -273,6 +275,8 @@ class PithosWindow(Gtk.ApplicationWindow):
         self.pandora = make_pandora(test_mode)
         self.set_proxy(reconnect=False)
         self.set_audio_quality()
+        self.set_audio_output()
+        self.set_audio_buffer()
         SecretService.unlock_keyring(self.on_keyring_unlocked)
 
     def on_keyring_unlocked(self, error):
@@ -300,33 +304,33 @@ class PithosWindow(Gtk.ApplicationWindow):
         self._query_buffer = Gst.Query.new_buffering(Gst.Format.PERCENT)
 
         self.player = Gst.ElementFactory.make("playbin", "player")
-        self.player.set_property('buffer-duration', 3 * Gst.SECOND)
+        self.player.set_property('buffer-duration', int(self.settings['audio-buffer']) * Gst.SECOND)
         self.rgvolume = Gst.ElementFactory.make("rgvolume", "rgvolume")
         self.rgvolume.set_property("album-mode", False)
         self.rglimiter = Gst.ElementFactory.make("rglimiter", "rglimiter")
         self.rglimiter.set_property("enabled", False)
         self.equalizer = Gst.ElementFactory.make("equalizer-10bands", "equalizer-10bands")
-        audioconvert = Gst.ElementFactory.make("audioconvert", "audioconvert")
-        audioresample = Gst.ElementFactory.make("audioresample", "audioresample")
-        audioresample.set_property("quality", RESAMPLER_QUALITY_MAX)
-        audioresample.set_property("sinc-filter-mode", RESAMPLER_FILTER_MODE_FULL)
-        audiosink = Gst.ElementFactory.make("autoaudiosink", "audiosink")
-        sinkbin = Gst.Bin()
-        sinkbin.add(self.rgvolume)
-        sinkbin.add(self.rglimiter)
-        sinkbin.add(self.equalizer)
-        sinkbin.add(audioconvert)
-        sinkbin.add(audioresample)
-        sinkbin.add(audiosink)
+        self.audioconvert = Gst.ElementFactory.make("audioconvert", "audioconvert")
+        self.audioresample = Gst.ElementFactory.make("audioresample", "audioresample")
+        self.audioresample.set_property("quality", RESAMPLER_QUALITY_MAX)
+        self.audioresample.set_property("sinc-filter-mode", RESAMPLER_FILTER_MODE_FULL)
+        self.audiosink = Gst.ElementFactory.make(self.settings['audio-output'], "audiosink")
+        self.sinkbin = Gst.Bin()
+        self.sinkbin.add(self.rgvolume)
+        self.sinkbin.add(self.rglimiter)
+        self.sinkbin.add(self.equalizer)
+        self.sinkbin.add(self.audioconvert)
+        self.sinkbin.add(self.audioresample)
+        self.sinkbin.add(self.audiosink)
 
         self.rgvolume.link(self.rglimiter)
         self.rglimiter.link(self.equalizer)
-        self.equalizer.link(audioconvert)
-        audioconvert.link(audioresample)
-        audioresample.link(audiosink)
+        self.equalizer.link(self.audioconvert)
+        self.audioconvert.link(self.audioresample)
+        self.audioresample.link(self.audiosink)
 
-        sinkbin.add_pad(Gst.GhostPad.new("sink", self.rgvolume.get_static_pad("sink")))
-        self.player.set_property("audio-sink", sinkbin)
+        self.sinkbin.add_pad(Gst.GhostPad.new("sink", self.rgvolume.get_static_pad("sink")))
+        self.player.set_property("audio-sink", self.sinkbin)
 
         self.emit('player-ready', True)
 
@@ -592,6 +596,21 @@ class PithosWindow(Gtk.ApplicationWindow):
     def set_audio_quality(self, *ignore):
         self.pandora.set_audio_quality(self.settings['audio-quality'])
 
+    def set_audio_output(self, *ignore):
+        if self.settings['audio-output'] != self.audiosink.get_factory().get_name():
+            self.stop();
+            self.sinkbin.remove(self.audiosink)
+            self.audiosink = Gst.ElementFactory.make(self.settings['audio-output'], "audiosink")
+            self.sinkbin.add(self.audiosink)
+            self.audioresample.link(self.audiosink)
+            self.play()
+
+    def set_audio_buffer(self, *ignore):
+        logging.warning(self.settings['audio-buffer'])
+        self.player.set_property('buffer-duration', int(self.settings['audio-buffer']) * Gst.SECOND)
+        if self.current_song is not None:
+            self.player.set_property('buffer-size', int(self.current_song.bitrate) * 125 * int(self.settings['audio-buffer']))
+
     def pandora_connect(self, *ignore, message="Logging in...", callback=None):
         def cb(password):
             if not password:
@@ -744,7 +763,7 @@ class PithosWindow(Gtk.ApplicationWindow):
         os.environ['PULSE_PROP_media.artist'] = song.artist
         os.environ['PULSE_PROP_media.name'] = '{}: {}'.format(song.artist, song.title)
         os.environ['PULSE_PROP_media.filename'] = audioUrl
-        self.player.set_property('buffer-size', int(song.bitrate) * 375)
+        self.player.set_property('buffer-size', int(song.bitrate) * 125 * int(self.settings['audio-buffer']))
         self.player.set_property('connection-speed', int(song.bitrate))
         self.player.set_property("uri", audioUrl)
         self._set_player_state(PseudoGst.BUFFERING)

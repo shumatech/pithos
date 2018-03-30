@@ -168,31 +168,6 @@
                         <property name="column_spacing">20</property>
                         <property name="row_homogeneous">1</property>
                         <child>
-                          <object class="GtkLabel" id="label_audio_quality">
-                            <property name="visible">1</property>
-                            <property name="halign">start</property>
-                            <property name="label" translatable="yes">Audio Quality</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkComboBoxText" id="audio_quality_combo">
-                            <property name="visible">1</property>
-                            <items>
-                              <item id="highQuality" translatable="yes">High</item>
-                              <item id="mediumQuality" translatable="yes">Medium</item>
-                              <item id="lowQuality" translatable="yes">Low</item>
-                            </items>
-                          </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">0</property>
-                          </packing>
-                        </child>
-                        <child>
                           <object class="GtkLabel" id="label_proxy">
                             <property name="visible">1</property>
                             <property name="tooltip_text" translatable="yes">This proxy is used for all HTTP/HTTPS traffic. If empty, http_proxy and https_proxy environment variables will be used.</property>
@@ -201,7 +176,7 @@
                           </object>
                           <packing>
                             <property name="left_attach">0</property>
-                            <property name="top_attach">1</property>
+                            <property name="top_attach">0</property>
                           </packing>
                         </child>
                         <child>
@@ -212,7 +187,7 @@
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
-                            <property name="top_attach">1</property>
+                            <property name="top_attach">0</property>
                           </packing>
                         </child>
                         <child>
@@ -224,7 +199,7 @@
                           </object>
                           <packing>
                             <property name="left_attach">0</property>
-                            <property name="top_attach">2</property>
+                            <property name="top_attach">1</property>
                           </packing>
                         </child>
                         <child>
@@ -235,7 +210,7 @@
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
-                            <property name="top_attach">2</property>
+                            <property name="top_attach">1</property>
                           </packing>
                         </child>
                         <child>
@@ -247,7 +222,7 @@
                           </object>
                           <packing>
                             <property name="left_attach">0</property>
-                            <property name="top_attach">3</property>
+                            <property name="top_attach">2</property>
                           </packing>
                         </child>
                         <child>
@@ -258,7 +233,7 @@
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
-                            <property name="top_attach">3</property>
+                            <property name="top_attach">2</property>
                           </packing>
                         </child>
                       </object>
@@ -281,6 +256,111 @@
                 <property name="label" translatable="yes">Pandora</property>
               </object>
               <packing>
+                <property name="tab_fill">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkGrid" id="grid7">
+                <property name="visible">1</property>
+                <property name="border_width">12</property>
+                <property name="row_spacing">8</property>
+                <property name="column_spacing">20</property>
+                <property name="row_homogeneous">1</property>
+                <property name="valign">start</property>
+                <child>
+                  <object class="GtkLabel" id="label_audio_quality">
+                    <property name="visible">1</property>
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">Quality</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkComboBoxText" id="audio_quality_combo">
+                    <property name="visible">1</property>
+                    <property name="hexpand">1</property>
+                    <items>
+                      <item id="highQuality" translatable="yes">High</item>
+                      <item id="mediumQuality" translatable="yes">Medium</item>
+                      <item id="lowQuality" translatable="yes">Low</item>
+                    </items>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label_audio_output">
+                    <property name="visible">1</property>
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">Output</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkComboBoxText" id="audio_output_combo">
+                    <property name="visible">1</property>
+                    <property name="hexpand">1</property>
+                    <items>
+                      <item id="autoaudiosink" translatable="yes">Automatic</item>
+                      <item id="alsasink" translatable="yes">ALSA</item>
+                      <item id="pulsesink" translatable="yes">PulseAudio</item>
+                      <item id="jackaudiosink" translatable="yes">Jack</item>
+                      <item id="osssink" translatable="yes">OSS</item>
+                    </items>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label_audio_buffer">
+                    <property name="visible">1</property>
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">Buffer</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkComboBoxText" id="audio_buffer_combo">
+                    <property name="visible">1</property>
+                    <property name="hexpand">2</property>
+                    <items>
+                      <item id="1" translatable="yes">1 second</item>
+                      <item id="2" translatable="yes">2 seconds</item>
+                      <item id="3" translatable="yes">3 seconds</item>
+                      <item id="4" translatable="yes">4 seconds</item>
+                      <item id="5" translatable="yes">5 seconds</item>
+                    </items>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">2</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="label2">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Audio</property>
+              </object>
+              <packing>
+                <property name="position">1</property>
                 <property name="tab_fill">0</property>
               </packing>
             </child>
@@ -337,20 +417,18 @@
                 </child>
               </object>
               <packing>
-                <property name="position">1</property>
+                <property name="position">2</property>
               </packing>
             </child>
             <child type="tab">
-              <object class="GtkLabel" id="label2">
+              <object class="GtkLabel" id="label3">
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Plugins</property>
               </object>
               <packing>
-                <property name="position">1</property>
+                <property name="position">2</property>
                 <property name="tab_fill">0</property>
               </packing>
-            </child>
-            <child type="tab">
             </child>
           </object>
           <packing>
